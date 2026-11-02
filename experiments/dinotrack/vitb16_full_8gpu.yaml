@@ -1,0 +1,64 @@
+# DINOTrack full model (Table 5 #5: + template CLS token, + CGHM, standard
+# attention -> DDI) — values carried over verbatim from the validated
+# baseline-fixed recipe (dinotrack_v1 dinotrack_vitb16_fixed_8gpu.yaml, LaSOT 68.15 @ ep245).
+# 8 GPUs x batch 16 = effective batch 128 (§4.1); per-epoch GOT-10k votval.
+MODEL:
+  BACKBONE:
+    WEIGHTS: "models/dinov3-vitb16-pretrain-lvd1689m"
+  NECK:
+    USE_CLS_TOKEN: True
+    USE_CGHM: True
+    CGHM_SIMILARITY: 'dot'        # literal PDF Eq. 4; cosine repair was rejected
+  DIFF:
+    ATTENTION: 'diff'
+
+TRAIN:
+  EPOCH: 245
+  LR: 0.0004
+  LR_DROP_EPOCH: 150
+  BATCH_SIZE: 16
+  NUM_WORKER: 4
+  BACKBONE_MULTIPLIER: 1.0      # backbone is fully frozen (§4.1); multiplier is a no-op
+  GIOU_WEIGHT: 2.0
+  L1_WEIGHT: 5.0
+  LOSS_FOCAL_W: 1.0
+  GRAD_CLIP_NORM: 0.0           # v1 recipe trains without grad clipping
+  VAL_EPOCH_INTERVAL: 1         # per-epoch validation (v1 behaviour)
+  SAVE_INTERVAL: 100
+  SEED: 42
+  SYNC_BN: True                   # 8x16 reproduces single-GPU batch-128 BN stats
+
+DATA:
+  # §4.1: flip + brightness jitter apply to the SEARCH region only
+  TEMPLATE_AUG: False
+  SEARCH_AUG: True
+  JOINT_GRAYSCALE_PROB: 0.0
+  MAX_SAMPLE_INTERVAL: 200
+  TRAIN:
+    DATASETS_NAME: ["LASOT", "GOT10K_vottrain", "COCO17", "TRACKINGNET"]
+    DATASETS_RATIO: [1, 1, 1, 1]
+    SAMPLE_PER_EPOCH: 60000
+  VAL:
+    DATASETS_NAME: ["GOT10K_votval"]
+    DATASETS_RATIO: [1]
+    SAMPLE_PER_EPOCH: 10000
+  SEARCH:
+    SIZE: 256
+    FACTOR: 4.0
+    CENTER_JITTER: 3.0
+    SCALE_JITTER: 0.25
+    NUMBER: 1
+  TEMPLATE:
+    NUMBER: 1
+    SIZE: 128
+    FACTOR: 2.0
+    CENTER_JITTER: 0
+    SCALE_JITTER: 0
+
+TEST:
+  EPOCH: 245
+  TEMPLATE_FACTOR: 2.0
+  TEMPLATE_SIZE: 128
+  SEARCH_FACTOR: 4.0
+  SEARCH_SIZE: 256
+  HANN: True

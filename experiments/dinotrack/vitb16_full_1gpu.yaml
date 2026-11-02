@@ -1,0 +1,64 @@
+# DINOTrack full model, single-GPU paper recipe (§4.1 / Table 5 #5).
+# The batch is 128 on one GPU, as stated in the paper.  This is the same
+# dot-CGHM model/data/optimizer recipe as vitb16_full_8gpu.yaml; only the
+# per-device batch, worker count, and SyncBatchNorm setting differ.
+MODEL:
+  BACKBONE:
+    WEIGHTS: "models/dinov3-vitb16-pretrain-lvd1689m"
+  NECK:
+    USE_CLS_TOKEN: True
+    USE_CGHM: True
+    CGHM_SIMILARITY: 'dot'        # literal PDF Eq. 4
+  DIFF:
+    ATTENTION: 'diff'
+
+TRAIN:
+  EPOCH: 245
+  LR: 0.0004
+  LR_DROP_EPOCH: 150
+  BATCH_SIZE: 128                # paper §4.1: one GPU, total batch 128
+  NUM_WORKER: 8
+  BACKBONE_MULTIPLIER: 1.0      # backbone is fully frozen; multiplier is a no-op
+  GIOU_WEIGHT: 2.0
+  L1_WEIGHT: 5.0
+  LOSS_FOCAL_W: 1.0
+  GRAD_CLIP_NORM: 0.0           # no gradient clipping stated in the paper
+  VAL_EPOCH_INTERVAL: 1
+  SAVE_INTERVAL: 100            # epochs 100, 200, and final 245
+  SEED: 42
+  SYNC_BN: False                # ordinary BN matches the paper's single GPU
+
+DATA:
+  # §4.1: horizontal flip + brightness jitter on the search region only
+  TEMPLATE_AUG: False
+  SEARCH_AUG: True
+  JOINT_GRAYSCALE_PROB: 0.0
+  MAX_SAMPLE_INTERVAL: 200
+  TRAIN:
+    DATASETS_NAME: ["LASOT", "GOT10K_vottrain", "COCO17", "TRACKINGNET"]
+    DATASETS_RATIO: [1, 1, 1, 1]
+    SAMPLE_PER_EPOCH: 60000
+  VAL:
+    DATASETS_NAME: ["GOT10K_votval"]
+    DATASETS_RATIO: [1]
+    SAMPLE_PER_EPOCH: 10000
+  SEARCH:
+    SIZE: 256
+    FACTOR: 4.0
+    CENTER_JITTER: 3.0
+    SCALE_JITTER: 0.25
+    NUMBER: 1
+  TEMPLATE:
+    NUMBER: 1
+    SIZE: 128
+    FACTOR: 2.0
+    CENTER_JITTER: 0
+    SCALE_JITTER: 0
+
+TEST:
+  EPOCH: 245
+  TEMPLATE_FACTOR: 2.0
+  TEMPLATE_SIZE: 128
+  SEARCH_FACTOR: 4.0
+  SEARCH_SIZE: 256
+  HANN: True

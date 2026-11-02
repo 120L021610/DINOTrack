@@ -1,0 +1,40 @@
+class EnvironmentSettings:
+    """Example training environment settings.
+
+    Copy this file to ``local.py`` (same directory) and fill in your own paths:
+
+        cp lib/train/admin/local.py.example lib/train/admin/local.py
+
+    ``local.py`` is git-ignored and will never be committed.
+    """
+
+    def __init__(self):
+        ws = '/path/to/DINOTrack'  # root directory of this repository
+
+        self.workspace_dir = ws                                                # training outputs (checkpoints, logs) live under here
+        self.tensorboard_dir = ws + '/tensorboard'
+        self.pretrained_networks = ''                                          # the tracker loads its backbone from MODEL.BACKBONE.WEIGHTS, not from here
+        self.lasot_dir = '/path/to/datasets/lasot'
+        self.got10k_dir = '/path/to/datasets/got10k/train'                     # vottrain/votval splits index into the TRAIN dir (OSTrack convention)
+        self.got10k_val_dir = '/path/to/datasets/got10k/val'
+        self.lasot_lmdb_dir = ''
+        self.got10k_lmdb_dir = ''
+        self.trackingnet_dir = '/path/to/datasets/trackingnet'
+        self.trackingnet_lmdb_dir = ''
+        self.coco_dir = '/path/to/datasets/coco'                               # MSCOCOSeq expects <root>/images/train2017 + <root>/annotations
+        self.coco_lmdb_dir = ''
+        self.lvis_dir = ''
+        self.sbd_dir = ''
+        self.imagenet_dir = ''
+        self.imagenet_lmdb_dir = ''
+        self.imagenetdet_dir = ''
+        self.ecssd_dir = ''
+        self.hkuis_dir = ''
+        self.msra10k_dir = ''
+        self.davis_dir = ''
+        self.youtubevos_dir = ''
+        # Anti-UAV / IRSTD datasets used in this fork (leave '' if unused)
+        self.antiuav410_dir = '/path/to/datasets/antiuav410/train'
+        self.irstd1k_dir = '/path/to/datasets/irstd1k'
+        self.irstd_dir = '/path/to/datasets/irstd'
+

@@ -1,0 +1,63 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+sdist/
+wheels/
+
+# ---- Virtual environments ----
+.env
+.venv
+env/
+venv/
+
+# ---- Editors / OS ----
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- Logs ----
+*.log
+
+# ---- Experiment tracking ----
+wandb/
+
+# ---- Machine-specific path config (create from the *.example templates) ----
+lib/train/admin/local.py
+lib/test/evaluation/local.py
+
+# ---- Datasets & pretrained assets (downloaded locally, never committed) ----
+data/*
+!data/.gitkeep
+models/*
+!models/.gitkeep
+pretrained_networks/
+pretrained_models/
+
+# ---- Training / evaluation artifacts ----
+output/
+tensorboard/
+
+# ---- Model weights, archives & submission bundles ----
+*.pth
+*.pt
+*.ckpt
+*.pth.tar
+*.safetensors
+*.zip
+*.tar
+*.tar.gz
+
+# ---- Local helper scripts that must never be published ----
+test_sh.sh
+SiamFC.zip
