@@ -115,6 +115,15 @@ Option 2: download the same-named snapshot from ModelScope.
 
 The code loads the backbone via `transformers.AutoModel.from_pretrained` using a repo-root-relative path; the `models/` directory is already git-ignored. Use of DINOv3 weights is subject to [their own license](https://github.com/facebookresearch/dinov3/blob/main/LICENSE).
 
+**The trained ep0245 checkpoint of this reproduction** is available from [Releases v1.0.0](https://github.com/120L021610/DINOTrack/releases/tag/v1.0.0) (~397 MB; tensors and primitives only, safe to load with `weights_only=True`; SHA-256 on the release page):
+
+```bash
+wget https://github.com/120L021610/DINOTrack/releases/download/v1.0.0/DINOTrack_ep0245.pth.tar
+mv DINOTrack_ep0245.pth.tar output/checkpoints/train/dinotrack/vitb16_full_1gpu/
+```
+
+You can then skip training and reproduce the reported metrics directly with the commands in the Evaluation section (`--ckpt` pointing at this file).
+
 ### Project Paths
 
 Generate the default local files and edit them:

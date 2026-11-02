@@ -115,6 +115,15 @@ conda activate dinotrack
 
 代码通过 `transformers.AutoModel.from_pretrained` 以仓库根相对路径加载；`models/` 目录已被 git 忽略。DINOv3 权重的使用受其[自身许可证](https://github.com/facebookresearch/dinov3/blob/main/LICENSE) 约束。
 
+**本复现训练好的 ep0245 权重**可从 [Releases v1.0.0](https://github.com/120L021610/DINOTrack/releases/tag/v1.0.0) 下载（约 397 MB，仅含张量与基本类型，可安全地用 `weights_only=True` 加载；SHA-256 见发布页）：
+
+```bash
+wget https://github.com/120L021610/DINOTrack/releases/download/v1.0.0/DINOTrack_ep0245.pth.tar
+mv DINOTrack_ep0245.pth.tar output/checkpoints/train/dinotrack/vitb16_full_1gpu/
+```
+
+之后即可跳过训练，直接用下一节"评估"中的命令（`--ckpt` 指向该文件）复现论文指标。
+
 ### 项目路径
 
 生成默认本地配置文件后再行编辑：
